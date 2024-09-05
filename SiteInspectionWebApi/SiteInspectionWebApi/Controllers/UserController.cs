@@ -13,143 +13,141 @@ namespace SiteInspectionWebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         // Get All Users
         [HttpGet("all")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            try
+            {
+                var users = await _userService.GetAllUsersAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting all users.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // Get User By Id
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = await _userService.GetUserByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user);
             }
-            return Ok(user);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while getting user with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
-        // Get User By Email or Username
-        [HttpGet("search")]
+        [HttpGet("Search")]
         public async Task<IActionResult> SearchUser([FromQuery] string email = null, [FromQuery] string username = null)
         {
-            if (string.IsNullOrWhiteSpace(email) && string.IsNullOrWhiteSpace(username))
+            try
             {
-                return BadRequest("Email or Username must be provided.");
+                bool user = false;
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    user = await _userService.EmailExist(email);
+                }
+                else if (!string.IsNullOrWhiteSpace(username))
+                {
+                    user = await _userService.UsernameExist(username);
+                }
+
+                return Ok(user);
             }
-            UserDTO user = null;
-            if (!string.IsNullOrWhiteSpace(email))
+            catch (Exception ex)
             {
-                user = await _userService.GetUserByEmail(email);
+                _logger.LogError(ex, "An error occurred during user search.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-            else if (!string.IsNullOrWhiteSpace(username))
-            {
-                user = await _userService.GetUserByUsername(username);
-            }
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
         }
 
         // Create User
         [HttpPost("create")]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO userDTo)
+        public async Task<IActionResult> AddUser([FromBody] UserDTO userDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                if (await _userService.EmailExist(userDto.Email))
+                {
+                    return BadRequest("Email already exists.");
+                }
+                if (await _userService.UsernameExist(userDto.Username))
+                {
+                    return BadRequest("Username already exists.");
+                }
+                await _userService.AddUserAsync(userDto);
+                return CreatedAtAction(nameof(GetUserById), new { id = userDto.Id }, userDto);
             }
-            if (await _userService.GetUserByEmail(userDTo.Email) != null)
+            catch (Exception ex)
             {
-                return BadRequest("Email already exists.");
+                _logger.LogError(ex, "An error occurred while adding a user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-            if (await _userService.GetUserByUsername(userDTo.Username) != null)
-            {
-                return BadRequest("Username already exists.");
-            }
-
-            userDTo.Id = Guid.NewGuid();
-            userDTo.CreatedDate = DateTime.Now;
-            userDTo.UpdatedDate = userDTo.CreatedDate;
-            userDTo.UpdatedBy = userDTo.CreatedBy;
-            userDTo.Password = PasswordHasher.HashPassword(userDTo.Password);
-            userDTo.ProfileImage = string.IsNullOrWhiteSpace(userDTo.ProfileImage) ? null : userDTo.ProfileImage;
-
-            await _userService.AddUserAsync(userDTo);
-            return CreatedAtAction(nameof(GetUserById), new { id = userDTo.Id }, userDTo);
         }
 
         // Update User
         [HttpPut("update/{id:guid}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] Guid id,[FromBody] UserDTO userDTo)
+        public async Task<IActionResult> UpdateUser([FromRoute] Guid id, [FromBody] UpdateUserDTO userDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                if (id != userDto.Id)
+                {
+                    return BadRequest("UserId Mismatch.");
+                }
+                await _userService.UpdateUserAsync(userDto);
+                return NoContent();
             }
-            if(id != userDTo.Id)
+            catch (Exception ex)
             {
-                return BadRequest("UserId Mismatch.");
+                _logger.LogError(ex, $"An error occurred while updating user with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-            var existingUser = await _userService.GetUserByIdAsync(userDTo.Id);
-            if (existingUser == null)
-            {
-                return NotFound();
-            }
-
-            if (existingUser.Email != userDTo.Email && await _userService.GetUserByEmail(userDTo.Email) != null)
-            {
-                return BadRequest("Email already exists.");
-            }
-
-            if (existingUser.Username != userDTo.Username && await _userService.GetUserByUsername(userDTo.Username) != null)
-            {
-                return BadRequest("Username already exists.");
-            }
-         
-            existingUser.UpdatedDate = DateTime.Now;
-            await _userService.UpdateUserAsync(existingUser);
-            return NoContent();
-        }
-
-        // Soft Delete User
-        [HttpPatch("soft-delete/{id:guid}")]
-        public async Task<IActionResult> SoftDelete(Guid id)
-        {
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            user.IsActive = false;
-            await _userService.UpdateUserAsync(user);
-            return NoContent();
         }
 
         // Delete User
         [HttpDelete("delete/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
+            try
             {
-                return NotFound();
+                await _userService.DeleteUserAsync(id);
+                
+                return NoContent();
             }
-            await _userService.DeleteUserAsync(id);
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting user with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }

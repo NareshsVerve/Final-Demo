@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using SiteInspectionWebApi.Helper;
 using SiteInspectionWebApi.Interface;
 using SiteInspectionWebApi.Models.Database_Models;
 using SiteInspectionWebApi.Models.DTO;
+using SiteInspectionWebApi.Models.Enums;
 using SiteInspectionWebApi.Repository;
 
 namespace SiteInspectionWebApi.Service
@@ -16,35 +18,49 @@ namespace SiteInspectionWebApi.Service
         public async Task<UserDTO> GetUserByIdAsync(Guid id)
         {
            var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
             var userDto = UserDTO.Mapping(user);
             return userDto;
         }
-        public async Task<UserDTO> GetUserByEmail(string email)
-        {
-           var user = await _userRepository.GetUserByEmail(email);
-            var userDto = UserDTO.Mapping(user);
-            return userDto;
+        public async Task<bool> EmailExist(string email)
+        { 
+            return await _userRepository.EmailExist(email);
         }
-        public async Task<UserDTO> GetUserByUsername(string username)
+        public async Task<bool> UsernameExist(string username)
         {
-            var user = await _userRepository.GetUserByUsername(username);
-            var userDto = UserDTO.Mapping(user);
-            return userDto;
+            return await _userRepository.UsernameExist(username);
         }
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
+            if (users == null)
+            {
+                throw new Exception("User not found");
+            }
             var userDtos = UserDTO.Mapping(users);
             return userDtos;
         }
 
         public async Task AddUserAsync(UserDTO userDto)
         {
+            userDto.Id = Guid.NewGuid();
+            userDto.CreatedDate = DateTime.Now;
+            userDto.UpdatedDate = userDto.CreatedDate;
+            userDto.UpdatedBy = userDto.CreatedBy;
+            userDto.Password = PasswordHasher.HashPassword(userDto.Password);
+            userDto.ProfileImage = string.IsNullOrWhiteSpace(userDto.ProfileImage) ? null : userDto.ProfileImage;
+            if (userDto.Role == Role.Inspector) 
+            {
+                userDto.IsEmailVerified = false;
+            }
             var user = UserDTO.Mapping(userDto);
             await _userRepository.AddUserAsync(user);
         }
 
-        public async Task UpdateUserAsync(UserDTO userDto)
+        public async Task UpdateUserAsync(UpdateUserDTO userDto)
         {
             var existingUser = await _userRepository.GetUserByIdAsync(userDto.Id);
 
@@ -69,7 +85,15 @@ namespace SiteInspectionWebApi.Service
 
         public async Task DeleteUserAsync(Guid id)
         {
-            await _userRepository.DeleteUserAsync(id);
+
+            var existingUser = await _userRepository.GetUserByIdAsync(id);
+
+            if (existingUser == null)
+            {
+                throw new Exception("User not found");
+            }
+            existingUser.IsActive = false;
+            await _userRepository.UpdateUserAsync(existingUser);
         }
     }
 }

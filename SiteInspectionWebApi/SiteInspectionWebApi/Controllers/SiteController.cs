@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging; 
 using SiteInspectionWebApi.Interface;
 using SiteInspectionWebApi.Models.DTO;
 using SiteInspectionWebApi.Service;
@@ -11,81 +12,115 @@ namespace SiteInspectionWebApi.Controllers
     public class SiteController : ControllerBase
     {
         private readonly ISiteService _siteService;
-        public SiteController(ISiteService siteService)
+        private readonly ILogger<SiteController> _logger; 
+
+        public SiteController(ISiteService siteService, ILogger<SiteController> logger)
         {
             _siteService = siteService;
+            _logger = logger; // Initialize logger
         }
 
-        //Get All Sites
+        // Get All Sites
         [HttpGet("all")]
         public async Task<IActionResult> GetAllSites()
         {
-            var sites = await _siteService.GetAllSitesAsync();
-            return Ok(sites);
+            try
+            {
+                var sites = await _siteService.GetAllSitesAsync();
+                return Ok(sites);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving all sites.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // Get Site By Id
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetSiteById(Guid id)
         {
-            var site = await _siteService.GetSiteByIdAsync(id);
-            if (site == null)
+            try
             {
-                return NotFound();
+                var site = await _siteService.GetSiteByIdAsync(id);
+                if (site == null)
+                {
+                    return NotFound();
+                }
+                return Ok(site);
             }
-            return Ok(site);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while retrieving the site with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
-        // Create site
+        // Create Site
         [HttpPost("create")]
-        public async Task<IActionResult> AddSite([FromBody] SiteDTO siteDTo)
+        public async Task<IActionResult> AddSite([FromBody] SiteDTO siteDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                await _siteService.AddSiteAsync(siteDto);
+                return CreatedAtAction(nameof(GetSiteById), new { id = siteDto.Id }, siteDto);
             }
-            siteDTo.Id = Guid.NewGuid();
-            siteDTo.CreatedDate = DateTime.Now;
-            siteDTo.UpdatedBy = siteDTo.CreatedBy;
-            siteDTo.UpdatedDate = siteDTo.UpdatedDate;
-            await _siteService.AddSiteAsync(siteDTo);
-            return CreatedAtAction(nameof(GetSiteById), new { id = siteDTo.Id }, siteDTo);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding a new site.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
-        // Update site
+        // Update Site
         [HttpPut("update/{id:guid}")]
-        public async Task<IActionResult> Updatesite([FromRoute]Guid id,[FromBody] SiteDTO siteDTo)
+        public async Task<IActionResult> UpdateSite([FromRoute] Guid id, [FromBody] SiteDTO siteDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                if (id != siteDto.Id)
+                {
+                    return BadRequest("SiteID Mismatch.");
+                }
+                await _siteService.UpdateSiteAsync(siteDto);
+                return NoContent();
             }
-            if (id != siteDTo.Id)
+            catch (Exception ex)
             {
-                return BadRequest("SiteID Mismatch.");
+                _logger.LogError(ex, $"An error occurred while updating the site with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
-            var existingsite = await _siteService.GetSiteByIdAsync(siteDTo.Id);
-            if (existingsite == null)
-            {
-                return NotFound();
-            }
-            existingsite.UpdatedDate = DateTime.Now; 
-            await _siteService.UpdateSiteAsync(existingsite);
-            return NoContent();
         }
 
-        //Delete Site
-        [HttpDelete("Delete/{id:guid}")]
+        // Delete Site
+        [HttpDelete("delete/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var site = await _siteService.GetSiteByIdAsync(id);
-            if (site == null)
+            try
             {
-                return NotFound();
-            }
+                var site = await _siteService.GetSiteByIdAsync(id);
+                if (site == null)
+                {
+                    return NotFound();
+                }
 
-            await _siteService.DeleteSiteAsync(id);
-            return NoContent();
+                await _siteService.DeleteSiteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while deleting the site with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }

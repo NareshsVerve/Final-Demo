@@ -37,9 +37,9 @@ namespace SiteInspectionWebApi.Repository
         public async Task UpdateAssignmentAsync(Assignment assignment)
         {
             _context.Assignments.Update(assignment);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public async Task DeleteAssignmentAsync(Guid id)
+        /*public async Task DeleteAssignmentAsync(Guid id)
         {
             var assignment = await _context.Assignments.FindAsync(id);
             if (assignment != null)
@@ -47,6 +47,6 @@ namespace SiteInspectionWebApi.Repository
                 _context.Assignments.Remove(assignment);
                 await _context.SaveChangesAsync();
             }
-        }
+        }*/
     }
 }

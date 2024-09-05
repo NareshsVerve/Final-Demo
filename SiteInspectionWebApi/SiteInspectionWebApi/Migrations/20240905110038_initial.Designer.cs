@@ -12,7 +12,7 @@ using SiteInspectionWebApi.Data;
 namespace SiteInspectionWebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240904101056_initial")]
+    [Migration("20240905110038_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -152,6 +152,31 @@ namespace SiteInspectionWebApi.Migrations
                     b.HasIndex("AssignmentId");
 
                     b.ToTable("ErrorFindings");
+                });
+
+            modelBuilder.Entity("SiteInspectionWebApi.Models.Database_Models.LoggerEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Loggers");
                 });
 
             modelBuilder.Entity("SiteInspectionWebApi.Models.Database_Models.Otp", b =>
@@ -354,7 +379,7 @@ namespace SiteInspectionWebApi.Migrations
                     b.HasOne("SiteInspectionWebApi.Models.Database_Models.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SiteInspectionWebApi.Models.Database_Models.Country", "Country")

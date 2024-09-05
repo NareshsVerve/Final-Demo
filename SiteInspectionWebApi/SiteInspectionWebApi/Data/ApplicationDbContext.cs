@@ -17,6 +17,7 @@ namespace SiteInspectionWebApi.Data
         public virtual DbSet<Site> Sites { get; set; }
         public virtual DbSet<Assignment> Assignments { get; set; }
         public virtual DbSet<ErrorFinding> ErrorFindings { get; set; }
+        public virtual DbSet<LoggerEntry> Loggers { get; set; }
         public virtual DbSet<Otp> Otps { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

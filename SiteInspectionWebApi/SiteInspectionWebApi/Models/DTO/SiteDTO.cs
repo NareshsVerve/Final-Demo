@@ -29,7 +29,10 @@ namespace SiteInspectionWebApi.Models.DTO
         [Required]
         public Guid UpdatedBy { get; set; }
         [Required]
-        public DateTime UpdatedDate { get; set; } 
+        public DateTime UpdatedDate { get; set; }
+        public virtual Country? Country { get; set; }
+        public virtual State? State { get; set; }
+        public virtual City? City { get; set; }
 
         public static Site Mapping(SiteDTO siteDto)
         {
@@ -47,6 +50,7 @@ namespace SiteInspectionWebApi.Models.DTO
                 CreatedDate = siteDto.CreatedDate,
                 UpdatedBy = siteDto.UpdatedBy,
                 UpdatedDate = siteDto.UpdatedDate,
+                
             };
         }
 
@@ -76,6 +80,9 @@ namespace SiteInspectionWebApi.Models.DTO
                 CreatedDate = site.CreatedDate,
                 UpdatedBy = site.UpdatedBy,
                 UpdatedDate = site.UpdatedDate,
+                Country = site.Country,
+                State = site.State,
+                City = site.City
             };
         }
 

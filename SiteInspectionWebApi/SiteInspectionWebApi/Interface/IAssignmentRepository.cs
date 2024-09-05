@@ -10,6 +10,5 @@ namespace SiteInspectionWebApi.Interface
         Task<IEnumerable<Assignment>> GetAssignmentsByInspectorAsync(Guid inspectorId);
         Task AddAssignmentAsync(Assignment assignment);
         Task UpdateAssignmentAsync(Assignment assignment);
-        Task DeleteAssignmentAsync(Guid id);
     }
 }

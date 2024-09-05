@@ -1,15 +1,18 @@
 ﻿using SiteInspectionWebApi.Interface;
 using SiteInspectionWebApi.Models.Database_Models;
 using SiteInspectionWebApi.Models.DTO;
+using System.Data.SqlTypes;
 
 namespace SiteInspectionWebApi.Service
 {
     public class AssignmentService : IAssignmentService
     {
         private readonly IAssignmentRepository _assignmentRepository;
-        public AssignmentService(IAssignmentRepository assignmentRepository)
+        private readonly ILogger<AssignmentService> _logger;
+        public AssignmentService(IAssignmentRepository assignmentRepository, ILogger<AssignmentService> logger)
         {
             _assignmentRepository = assignmentRepository;
+            _logger = logger;
         }
         public async Task<AssignmentDTO> GetAssignmentByIdAsync(Guid id)
         {
@@ -42,12 +45,20 @@ namespace SiteInspectionWebApi.Service
         }
         public async Task UpdateAssignment(AssignmentDTO assignmentDto)
         {
-            var assignment = AssignmentDTO.Mapping(assignmentDto);
-             _assignmentRepository.UpdateAssignmentAsync(assignment);
+            var existingAssignment = await _assignmentRepository.GetAssignmentByIdAsync(assignmentDto.Id);
+            existingAssignment.Notes = assignmentDto.Notes;
+            existingAssignment.SiteId = assignmentDto.SiteId;
+            existingAssignment.Status = (int)assignmentDto.Status;
+            existingAssignment.UpdatedDate = DateTime.Now;
+            existingAssignment.UpdatedBy = assignmentDto.UpdatedBy;
+
+            await _assignmentRepository.UpdateAssignmentAsync(existingAssignment);
         }
         public async Task DeleteAssignmentAsync(Guid id)
         {
-            await _assignmentRepository.DeleteAssignmentAsync(id);
+            var existingAssignment = await _assignmentRepository.GetAssignmentByIdAsync(id);
+            existingAssignment.IsActive = false;
+            await _assignmentRepository.UpdateAssignmentAsync(existingAssignment);
         }
     }
 }

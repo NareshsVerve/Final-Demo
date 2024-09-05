@@ -25,6 +25,22 @@ namespace SiteInspectionWebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Loggers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Exception = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Loggers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Otps",
                 columns: table => new
                 {
@@ -128,7 +144,7 @@ namespace SiteInspectionWebApi.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sites_Countries_CountryId",
                         column: x => x.CountryId,
@@ -260,6 +276,9 @@ namespace SiteInspectionWebApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ErrorFindings");
+
+            migrationBuilder.DropTable(
+                name: "Loggers");
 
             migrationBuilder.DropTable(
                 name: "Otps");

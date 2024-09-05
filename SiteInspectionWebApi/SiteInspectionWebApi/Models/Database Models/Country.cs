@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SiteInspectionWebApi.Models.Database_Models
 {
@@ -6,7 +7,8 @@ namespace SiteInspectionWebApi.Models.Database_Models
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; } 
-        public  virtual ICollection<State> States { get; set; }
+        public string Name { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<State> States { get; set; }
     }
 }

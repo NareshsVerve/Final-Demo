@@ -33,7 +33,7 @@ namespace SiteInspectionWebApi.Repository
         public async Task AddSiteAsync(Site site)
         {
             await _context.Sites.AddAsync(site);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
         }
         public async Task UpdateSiteAsync(Site site)
         {
