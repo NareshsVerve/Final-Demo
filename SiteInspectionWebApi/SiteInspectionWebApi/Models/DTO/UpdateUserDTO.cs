@@ -48,5 +48,22 @@ namespace SiteInspectionWebApi.Models.DTO
                 IsActive = user.IsActive,
             };
         }
+        public static UpdateUserDTO Mapping(UserDTO userDto)
+        {
+            return new UpdateUserDTO()
+            {
+                Id = userDto.Id,
+                FirstName = userDto.FirstName,
+                LastName = userDto.LastName,
+                Username = userDto.Username,
+                Email = userDto.Email,
+                Role = userDto.Role,
+                IsEmailVerified = userDto.IsEmailVerified,
+                ProfileImage = userDto.ProfileImage,
+                UpdatedBy = userDto.UpdatedBy,
+                UpdatedDate = userDto.UpdatedDate,
+                IsActive = userDto.IsActive,
+            };
+        }
     }
 }

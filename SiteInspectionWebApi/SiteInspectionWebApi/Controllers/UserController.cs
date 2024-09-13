@@ -108,7 +108,26 @@ namespace SiteInspectionWebApi.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
             }
         }
-
+        [HttpPost("Change-Password/{id:guid}")]
+        public async Task<IActionResult> ChangePassword(Guid id, string currentPassword, string newPassword)
+        {
+            try
+            {
+                var result = await _userService.ChangePasswordAsync(id, currentPassword, newPassword);
+                if (!result.Succeeded)
+                {
+                    return BadRequest();
+                }
+                return Ok("Password changes Successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while updating user's password with ID: {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+        }
+    
+        
         // Update User
         [HttpPut("update/{id:guid}")]
         public async Task<IActionResult> UpdateUser([FromRoute] Guid id, [FromBody] UpdateUserDTO userDto)

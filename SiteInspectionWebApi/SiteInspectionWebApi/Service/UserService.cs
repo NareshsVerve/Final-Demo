@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using SiteInspectionWebApi.Helper;
 using SiteInspectionWebApi.Interface;
 using SiteInspectionWebApi.Models.Database_Models;
@@ -15,24 +16,6 @@ namespace SiteInspectionWebApi.Service
         {
             _userRepository = userRepository;
         }
-        public async Task<UserDTO> GetUserByIdAsync(Guid id)
-        {
-           var user = await _userRepository.GetUserByIdAsync(id);
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
-            var userDto = UserDTO.Mapping(user);
-            return userDto;
-        }
-        public async Task<bool> EmailExist(string email)
-        { 
-            return await _userRepository.EmailExist(email);
-        }
-        public async Task<bool> UsernameExist(string username)
-        {
-            return await _userRepository.UsernameExist(username);
-        }
         public async Task<IEnumerable<UserDTO>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
@@ -43,7 +26,62 @@ namespace SiteInspectionWebApi.Service
             var userDtos = UserDTO.Mapping(users);
             return userDtos;
         }
+        public async Task<UserDTO> GetUserByIdAsync(Guid id)
+        {
+           var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            var userDto = UserDTO.Mapping(user);
+            return userDto;
+        }
+        public async Task<UserDTO> GetUserEmailAsync(string Email)
+         {
+           var user = await _userRepository.GetUserEmailAsync(Email);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+             var userDto = UserDTO.Mapping(user);
+            return userDto;
+        }
 
+        public async Task<bool> EmailExist(string email)
+        { 
+            return await _userRepository.EmailExist(email);
+        }
+        public async Task<bool> UsernameExist(string username)
+        {
+            return await _userRepository.UsernameExist(username);
+        }
+        public async Task<IdentityResult> ResetPasswordAsync(string email, string newPassword)
+        {
+            var user = await _userRepository.GetUserEmailAsync(email);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+            user.PasswordHash = PasswordHasher.HashPassword(newPassword);
+            await _userRepository.UpdateUserAsync(user);
+            return IdentityResult.Success;
+        }
+        public async Task<IdentityResult> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+            if (user.PasswordHash != PasswordHasher.HashPassword (currentPassword))
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Old Password is not Matched." });
+            }
+
+            user.PasswordHash = PasswordHasher.HashPassword(newPassword);
+            await _userRepository.UpdateUserAsync(user);
+            return IdentityResult.Success;
+        }
         public async Task AddUserAsync(UserDTO userDto)
         {
             userDto.Id = Guid.NewGuid();
@@ -52,10 +90,7 @@ namespace SiteInspectionWebApi.Service
             userDto.UpdatedBy = userDto.CreatedBy;
             userDto.Password = PasswordHasher.HashPassword(userDto.Password);
             userDto.ProfileImage = string.IsNullOrWhiteSpace(userDto.ProfileImage) ? null : userDto.ProfileImage;
-            if (userDto.Role == Role.Inspector) 
-            {
-                userDto.IsEmailVerified = false;
-            }
+            
             var user = UserDTO.Mapping(userDto);
             await _userRepository.AddUserAsync(user);
         }

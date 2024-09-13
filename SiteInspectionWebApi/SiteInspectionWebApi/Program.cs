@@ -52,12 +52,16 @@ builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IErrorrFindingService, ErrorFindingService>();
 builder.Services.AddScoped<ILocationServices, LocationService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
+builder.Services.AddScoped<EmailServices>();
+
 // Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISiteRepository, SiteRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IErrorFindingsRepository, ErrorFindingRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services .AddScoped<IOtpRepository, OtpRepository>();
 
 var app = builder.Build();
 

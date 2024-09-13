@@ -1,0 +1,31 @@
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\appsettings.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\Site Inspection Management MVC.staticwebassets.runtime.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\Site Inspection Management MVC.exe
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\Site Inspection Management MVC.deps.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\Site Inspection Management MVC.runtimeconfig.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\Site Inspection Management MVC.dll
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\bin\Debug\net8.0\Site Inspection Management MVC.pdb
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.AssemblyInfoInputs.cache
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.AssemblyInfo.cs
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.csproj.CoreCompileInputs.cache
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.RazorAssemblyInfo.cache
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.RazorAssemblyInfo.cs
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.sourcelink.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets\msbuild.Site Inspection Management MVC.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets\msbuild.build.Site Inspection Management MVC.props
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Site Inspection Management MVC.props
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Site Inspection Management MVC.props
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\scopedcss\bundle\Site Inspection Management MVC.styles.css
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\scopedcss\projectbundle\Site Inspection Management MVC.bundle.scp.css
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.dll
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\refint\Site Inspection Management MVC.dll
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.pdb
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\Site Inspection Management MVC.genruntimeconfig.cache
+C:\Users\verve\Desktop\Naresh Training\Final Demo\Site Inspection Management MVC\Site Inspection Management MVC\obj\Debug\net8.0\ref\Site Inspection Management MVC.dll

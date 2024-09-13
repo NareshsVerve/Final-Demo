@@ -104,6 +104,13 @@ namespace SiteInspectionWebApi.Controllers
         {
             try
             {
+                var assignments = await _assignmentService.GetAssignmentsByInspectorAsync(assignmentDto.InspectorId);
+                var existingAssignmentToSite = assignments.Where(a => a.SiteId == assignmentDto.SiteId && a.InspectionDate <= DateTime.Now).ToList();
+
+                if (existingAssignmentToSite != null)
+                {
+                    return BadRequest("Assignment is Already exist for the Selected Site for this Inspector. ");
+                }
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);

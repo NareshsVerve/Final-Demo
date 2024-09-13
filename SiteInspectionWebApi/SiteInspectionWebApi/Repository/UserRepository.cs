@@ -2,6 +2,8 @@
 using SiteInspectionWebApi.Data;
 using SiteInspectionWebApi.Interface;
 using SiteInspectionWebApi.Models.Database_Models;
+using SiteInspectionWebApi.Models.DTO;
+using SiteInspectionWebApi.Models.Enums;
 
 namespace SiteInspectionWebApi.Repository
 {
@@ -21,7 +23,13 @@ namespace SiteInspectionWebApi.Repository
         public async Task<User> GetUserByUsernameOrEmailAsync(string usernameOrEmail)
         {
             return await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
+                .FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail && u.IsEmailVerified == true);
+        }
+
+        public async Task<User> GetUserEmailAsync(string email)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
         public async Task<bool> EmailExist(string email)
         {
@@ -42,6 +50,10 @@ namespace SiteInspectionWebApi.Repository
 
         public async Task AddUserAsync(User user)
         {
+            if (user.Role == (int)Role.Inspector)
+            {
+                user.IsEmailVerified = false;
+            }
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
         }

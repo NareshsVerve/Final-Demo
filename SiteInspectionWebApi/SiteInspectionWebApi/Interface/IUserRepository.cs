@@ -6,6 +6,7 @@ namespace SiteInspectionWebApi.Interface
     {
         Task<User> GetUserByIdAsync(Guid id);
         Task<User> GetUserByUsernameOrEmailAsync(string usernameOrEmail);
+        Task<User> GetUserEmailAsync(string Email);
         Task<bool>EmailExist(string email);
         Task<bool> UsernameExist(string username);
         Task<IEnumerable<User>> GetAllUsersAsync();

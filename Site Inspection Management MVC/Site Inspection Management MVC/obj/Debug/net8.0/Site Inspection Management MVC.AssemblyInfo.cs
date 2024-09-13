@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Site Inspection Management MVC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de23867576e7275bf03bdeebabc41a91c1d71253")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+175fb7438fe604c83b05e8c0949c53cdf70feb62")]
 [assembly: System.Reflection.AssemblyProductAttribute("Site Inspection Management MVC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Site Inspection Management MVC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
